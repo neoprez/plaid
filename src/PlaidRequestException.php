@@ -22,7 +22,7 @@ class PlaidRequestException extends Exception
         parent::__construct();
         $this->body = \json_decode($response->body());
 		$this->code = $response->status();
-		$this->message = $this->body->display_message ?? ('HTTP error ' . $response->status());
+		$this->message = $this->body->display_message ?? $this->body->error_message ?? ('HTTP error ' . $response->status());
 	}
 
 	/**
