@@ -8,6 +8,38 @@ use Abivia\Plaid\PlaidRequestException;
 class Transactions extends AbstractResource
 {
     /**
+     * The /transactions/sync endpoint retrieves 
+     * transactions associated with an Item and 
+     * can fetch updates using a cursor to track 
+     * which updates have already been seen.
+     *
+     * @param string $accessToken
+     * @param string|null $cursor
+     * @param int $count
+     * @param array<string,mixed> $options
+     * @return Transactions
+     * @throws PlaidRequestException
+     */
+    public function sync(
+        string $accessToken,
+        ?string $cursor = null,
+        int $count = 100,
+        array $options = []
+    ): self {
+        $this->sendRequest(
+            'transactions/sync',
+            [
+                'access_token' => $accessToken,
+                'cursor' => $cursor,
+                'count' => $count,
+                'options' => (object)$options
+            ]
+        );
+
+        return $this;
+    }
+
+    /**
      * Get all transactions for a particular Account.
      *
      * @param string $accessToken
@@ -22,8 +54,7 @@ class Transactions extends AbstractResource
         Carbon $startDate,
         Carbon $endDate,
         array $options = []
-    ): self
-    {
+    ): self {
         $this->sendRequest(
             'transactions/get',
             [
@@ -50,5 +81,4 @@ class Transactions extends AbstractResource
 
         return $this;
     }
-
 }

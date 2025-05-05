@@ -16,6 +16,28 @@ use Illuminate\Support\Carbon;
  */
 class TransactionsTest extends TestCase
 {
+
+    public function testSyncTransactions(): void
+    {
+        $psrResponse = (new PsrResponse(200, [], '{}'));
+        Http::shouldReceive('post')
+            ->with('transactions/sync',
+                [
+                    'client_id' => 'id',
+                    'secret' => 'secret',
+                    'access_token' => 'access_token',
+                    'cursor' => 'cursor',
+                    'count' => 110,
+                    'options' =>
+                        (object)[],
+                ]
+            )
+            ->andReturn(new Response($psrResponse));
+        $this->expectPlaidHeader();
+        $obj = new Transactions('id', 'secret', '');
+        $obj->sync('access_token', 'cursor', 110);
+    }
+
     public function testGetTransactions(): void
     {
         $psrResponse = (new PsrResponse(200, [], '{}'));
