@@ -41,7 +41,8 @@ class Tokens extends AbstractResource
         ?string $redirectUri = null,
         ?string $androidPackageName = null,
         ?string $paymentId = null,
-        ?string $institutionId = null): self
+        ?string $institutionId = null,
+        ?int $transactionDaysRequested = null): self
     {
         static $argMap = [
             'accessToken' => 'access_token',
@@ -70,6 +71,12 @@ class Tokens extends AbstractResource
         if ($paymentId) {
             $params['payment_initiation'] = [
                 'payment_id' => $paymentId
+            ];
+        }
+
+        if ($transactionDaysRequested) {
+            $params['transactions'] = [
+                'days_requested' => $transactionDaysRequested
             ];
         }
 

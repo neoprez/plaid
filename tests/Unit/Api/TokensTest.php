@@ -410,4 +410,45 @@ class TokensTest extends TestCase
         $obj = new Tokens('id', 'secret', '');
         $obj->get('link_token');
     }
+
+    public function testTransactionDays(): void
+    {
+        $psrResponse = (new PsrResponse(200, [], '{}'));
+        Http::shouldReceive('post')
+            ->with('link/token/create',
+                [
+                    'client_id' => 'id',
+                    'secret' => 'secret',
+                    'client_name' => 'client_name',
+                    'language' => 'en',
+                    'country_codes' =>
+                        [
+                            0 => 'US',
+                        ],
+                    'user' =>
+                        [
+                            'client_user_id' => 'usr_12345',
+                        ],
+                    'products' =>
+                        [
+                        ],
+                    'webhook' => 'http://webhook.url',
+                    'transactions' => [
+                        'days_requested' => 30,
+                    ]
+                ]
+            )
+            ->andReturn(new Response($psrResponse));
+        $this->expectPlaidHeader();
+        $obj = new Tokens('id', 'secret', '');
+        $obj->create(
+            'client_name',
+            'en',
+            ['US'],
+            new User('usr_12345'),
+            [],
+            'http://webhook.url',
+            transactionDaysRequested: 30,
+        );
+    }
 }
