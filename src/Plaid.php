@@ -79,10 +79,19 @@ class Plaid
      */
     public function __call(string $resourceName, array $args): AbstractResource
     {
+        // Try with the original resource name
         $resourceClass = __NAMESPACE__ . "\\Api\\$resourceName";
+
+        // If the class doesn't exist, try with the first letter capitalized
         if (!class_exists($resourceClass)) {
-            throw new UnexpectedValueException("Unknown Plaid resource: {$resourceName}");
+            $capitalizedResourceName = ucfirst($resourceName);
+            $resourceClass = __NAMESPACE__ . "\\Api\\$capitalizedResourceName";
+
+            if (!class_exists($resourceClass)) {
+                throw new UnexpectedValueException("Unknown Plaid resource: {$resourceName}");
+            }
         }
+
         return new $resourceClass($this->clientId, $this->clientSecret, $this->baseUrl);
     }
 
