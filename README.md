@@ -45,7 +45,19 @@ Via composer:
 composer require abivia/plaid
 ```
 
-## Usage
+## Configuration
+
+### Publishing the config file
+
+After installing the package, you can publish the configuration file using:
+
+```bash
+php artisan vendor:publish --tag=plaid-config
+```
+
+This will create a `config/plaid.php` file in your application where you can modify the configuration.
+
+### Environment Variables
 
 Set Plaid credentials in your environment. The default environment is "production". You only need to
 provide secrets for the environments you are using.
@@ -56,6 +68,8 @@ PLAID_DEVELOPMENT_SECRET=dev_secret
 PLAID_PRODUCTION_SECRET=prod_secret
 PLAID_SANDBOX_SECRET=sandbox_secret
 ```
+
+## Usage
 
 ```php
 $token = Plaid::sandbox()->createPublicToken($myId, ['transactions'])->publicToken;

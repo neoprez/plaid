@@ -24,7 +24,6 @@ class TransactionTest extends TestCase
             );
             $this->assertIsArray($transactions->accounts);
         } catch (PlaidRequestException $ex) {
-            $this->addWarning("Plaid error response " . $ex->getMessage());
             print_r($ex->getBody());
         }
     }

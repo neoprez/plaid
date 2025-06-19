@@ -95,14 +95,14 @@ class Plaid
 
     public function client(?string $clientId): self
     {
-        $this->clientId = $clientId ?? env('PLAID_CLIENT_ID');
+        $this->clientId = $clientId ?? config('plaid.client_id');
 
         return $this;
     }
 
     public function environment(?string $environment = null): self
     {
-        $environment ??= env('PLAID_ENVIRONMENT', 'production');
+        $environment ??= config('plaid.environment', 'production');
         if (isset(self::$plaidEnvironments[$environment])) {
             $this->envString = $environment;
             $this->baseUrl = self::$plaidEnvironments[$environment];
@@ -122,8 +122,7 @@ class Plaid
             if (!isset($this->envString)) {
                 $this->environment();
             }
-            $envVar = 'PLAID_' . strtoupper($this->envString) . '_SECRET';
-            $this->clientSecret = env($envVar);
+            $this->clientSecret = config("plaid.secrets.{$this->envString}");
         } else {
             $this->clientSecret = $clientSecret;
         }
